@@ -12,11 +12,8 @@
     "num_test_files": 5
   },
   "llm_provider": {
-    "type": "mock",
+    "type": "openai",
     "config": {
-      "mock": {
-        "accuracy": 0.8
-      },
       "openai": {
         "model": "gpt-4",
         "temperature": 0.0

@@ -151,48 +151,6 @@ class OllamaProvider(LLMProvider):
             return json.dumps({"above_250": [], "anomalies": [], "error": str(e)}), time.time() - start_time
 
 
-class MockLLMProvider(LLMProvider):
-    """Mock LLM provider for testing without API calls."""
-
-    def __init__(self, accuracy: float = 0.8):
-        """
-        Initialize mock provider.
-
-        Args:
-            accuracy: Simulated accuracy (0-1)
-        """
-        self.accuracy = accuracy
-        import random
-        self.random = random
-
-    def query(self, prompt: str) -> Tuple[str, float]:
-        """Return mock response based on prompt."""
-        import time
-        start_time = time.time()
-
-        # Simulate processing time
-        time.sleep(self.random.uniform(0.1, 0.5))
-
-        # Extract transaction data from prompt (very simple parsing)
-        # In real scenario, we'd parse the CSV data properly
-        response = {
-            "above_250": [],
-            "anomalies": []
-        }
-
-        # Simulate some detection (for testing purposes)
-        # This is intentionally simple for demonstration
-        if "TXN" in prompt:
-            # Simulate finding some transactions
-            response["above_250"] = ["TXN001", "TXN005"] if self.random.random() < self.accuracy else []
-            response["anomalies"] = [
-                {"transaction_id": "TXN003", "reason": "Mock anomaly detection"}
-            ] if self.random.random() < self.accuracy else []
-
-        response_time = time.time() - start_time
-        return json.dumps(response), response_time
-
-
 class LLMFactory:
     """Factory for creating LLM providers."""
 
@@ -202,7 +160,7 @@ class LLMFactory:
         Create an LLM provider.
 
         Args:
-            provider_type: Type of provider ("openai", "anthropic", "ollama", "mock")
+            provider_type: Type of provider ("openai", "anthropic", "ollama")
             **kwargs: Additional arguments for the provider
 
         Returns:
@@ -211,8 +169,7 @@ class LLMFactory:
         providers = {
             "openai": OpenAIProvider,
             "anthropic": AnthropicProvider,
-            "ollama": OllamaProvider,
-            "mock": MockLLMProvider
+            "ollama": OllamaProvider
         }
 
         if provider_type not in providers:
@@ -277,27 +234,12 @@ if __name__ == "__main__":
     # Example usage
     print("Testing LLM providers...\n")
 
-    # Test with mock provider
-    print("1. Testing Mock Provider:")
-    mock_provider = LLMFactory.create("mock", accuracy=0.9)
-    tester = LLMTester(mock_provider)
-
-    test_prompt = """Analyze these transactions:
-TXN001, 2024-01-01, 300.00, Shopping, Store1
-TXN002, 2024-01-02, 100.00, Groceries, Store2
-
-Find transactions > 250 GBP and anomalies."""
-
-    response, resp_time = tester.test_prompt(test_prompt)
-    print(f"Response: {response}")
-    print(f"Time: {resp_time:.2f}s\n")
-
-    # Instructions for real providers
-    print("2. To use OpenAI:")
+    # Instructions for providers
+    print("1. To use OpenAI:")
     print("   provider = LLMFactory.create('openai', model='gpt-4', api_key='your-key')")
     print()
-    print("3. To use Anthropic:")
+    print("2. To use Anthropic:")
     print("   provider = LLMFactory.create('anthropic', model='claude-3-5-sonnet-20241022', api_key='your-key')")
     print()
-    print("4. To use Ollama (local):")
+    print("3. To use Ollama (local):")
     print("   provider = LLMFactory.create('ollama', model='llama2')")

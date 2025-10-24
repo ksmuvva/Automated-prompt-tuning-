@@ -16,13 +16,14 @@ from prompt_templates import PromptTemplateLibrary
 from llm_interface import LLMFactory, LLMTester, format_transaction_data
 from metrics_evaluator import MetricsEvaluator, MetricsTracker
 from prompt_optimizer import PromptOptimizer, AdaptiveOptimizer, PromptCandidate
+from nlp_agent import NLPAgent
 
 
 class PromptTuningOrchestrator:
     """Main orchestrator for the prompt tuning system."""
 
     def __init__(self, data_dir: str = "bank_data",
-                 llm_provider: str = "mock",
+                 llm_provider: Optional[str] = None,
                  llm_config: Optional[Dict] = None,
                  max_generations: int = 5,
                  population_size: int = 15,
@@ -32,7 +33,7 @@ class PromptTuningOrchestrator:
 
         Args:
             data_dir: Directory containing CSV files
-            llm_provider: Type of LLM provider to use
+            llm_provider: Type of LLM provider to use (openai, anthropic, ollama)
             llm_config: Configuration for LLM provider
             max_generations: Maximum optimization generations
             population_size: Number of prompts per generation
@@ -43,10 +44,14 @@ class PromptTuningOrchestrator:
         self.max_generations = max_generations
 
         # Initialize components
-        print(f"Initializing LLM provider: {llm_provider}")
-        llm_config = llm_config or {}
-        llm = LLMFactory.create(llm_provider, **llm_config)
-        self.llm_tester = LLMTester(llm)
+        if llm_provider:
+            print(f"Initializing LLM provider: {llm_provider}")
+            llm_config = llm_config or {}
+            llm = LLMFactory.create(llm_provider, **llm_config)
+            self.llm_tester = LLMTester(llm)
+        else:
+            # LLM tester can be set later
+            self.llm_tester = None
 
         self.evaluator = MetricsEvaluator()
         self.tracker = MetricsTracker()
@@ -313,11 +318,33 @@ class PromptTuningOrchestrator:
 
 def main():
     """Main entry point."""
-    parser = argparse.ArgumentParser(description="Automated Prompt Tuning System")
-    parser.add_argument("--mode", choices=["generate", "optimize", "quick-test"],
-                       default="optimize", help="Mode to run")
-    parser.add_argument("--provider", choices=["openai", "anthropic", "ollama", "mock"],
-                       default="mock", help="LLM provider")
+    parser = argparse.ArgumentParser(
+        description="Automated Prompt Tuning System with NLP Agent",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+  # Interactive NLP Agent mode (recommended)
+  python main.py --mode agent
+
+  # Generate sample data
+  python main.py --mode generate
+
+  # Run optimization with OpenAI
+  export OPENAI_API_KEY='your-key'
+  python main.py --mode optimize --provider openai --model gpt-4
+
+  # Run optimization with Anthropic
+  export ANTHROPIC_API_KEY='your-key'
+  python main.py --mode optimize --provider anthropic
+
+  # Quick test a specific prompt
+  python main.py --mode quick-test --provider openai --prompt-name concise_direct
+        """
+    )
+    parser.add_argument("--mode", choices=["agent", "generate", "optimize", "quick-test"],
+                       default="agent", help="Mode to run (default: agent)")
+    parser.add_argument("--provider", choices=["openai", "anthropic", "ollama"],
+                       help="LLM provider (required for optimize/quick-test modes)")
     parser.add_argument("--model", type=str, help="Model name (provider-specific)")
     parser.add_argument("--api-key", type=str, help="API key for provider")
     parser.add_argument("--generations", type=int, default=5, help="Max generations")
@@ -327,7 +354,12 @@ def main():
 
     args = parser.parse_args()
 
-    if args.mode == "generate":
+    if args.mode == "agent":
+        # Run NLP Agent in interactive mode
+        agent = NLPAgent()
+        agent.run_interactive()
+
+    elif args.mode == "generate":
         # Generate sample data
         print("Generating sample data...")
         generator = BankDataGenerator(num_files=30, transactions_per_file=100)
@@ -339,36 +371,61 @@ def main():
 
     elif args.mode == "optimize":
         # Run optimization
+        if not args.provider:
+            print("Error: --provider is required for optimize mode")
+            print("Available providers: openai, anthropic, ollama")
+            print("\nExample:")
+            print("  export OPENAI_API_KEY='your-key'")
+            print("  python main.py --mode optimize --provider openai --model gpt-4")
+            return
+
         llm_config = {}
         if args.model:
             llm_config['model'] = args.model
         if args.api_key:
             llm_config['api_key'] = args.api_key
 
-        orchestrator = PromptTuningOrchestrator(
-            llm_provider=args.provider,
-            llm_config=llm_config,
-            max_generations=args.generations,
-            population_size=args.population,
-            num_test_files=args.test_files
-        )
+        try:
+            orchestrator = PromptTuningOrchestrator(
+                llm_provider=args.provider,
+                llm_config=llm_config,
+                max_generations=args.generations,
+                population_size=args.population,
+                num_test_files=args.test_files
+            )
 
-        best = orchestrator.run_optimization()
+            best = orchestrator.run_optimization()
+        except Exception as e:
+            print(f"\nError: {str(e)}")
+            print("\nMake sure you have set the appropriate API key:")
+            if args.provider == 'openai':
+                print("  export OPENAI_API_KEY='your-key'")
+            elif args.provider == 'anthropic':
+                print("  export ANTHROPIC_API_KEY='your-key'")
 
     elif args.mode == "quick-test":
         # Quick test
+        if not args.provider:
+            print("Error: --provider is required for quick-test mode")
+            print("Available providers: openai, anthropic, ollama")
+            return
+
         llm_config = {}
         if args.model:
             llm_config['model'] = args.model
         if args.api_key:
             llm_config['api_key'] = args.api_key
 
-        orchestrator = PromptTuningOrchestrator(
-            llm_provider=args.provider,
-            llm_config=llm_config
-        )
+        try:
+            orchestrator = PromptTuningOrchestrator(
+                llm_provider=args.provider,
+                llm_config=llm_config
+            )
 
-        orchestrator.quick_test(args.prompt_name)
+            orchestrator.quick_test(args.prompt_name)
+        except Exception as e:
+            print(f"\nError: {str(e)}")
+            print("\nMake sure you have set the appropriate API key:")
 
 
 if __name__ == "__main__":

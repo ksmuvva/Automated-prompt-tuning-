@@ -43,9 +43,10 @@ def example_2_test_single_prompt():
     print(f"\nTesting prompt: {template.name}")
     print(f"Style: {template.style}")
 
-    # Create mock LLM
-    llm = LLMFactory.create("mock", accuracy=0.85)
-    tester = LLMTester(llm)
+    # Note: Configure LLM provider (openai, anthropic, or ollama)
+    # Example: llm = LLMFactory.create("openai", model="gpt-4", api_key=os.getenv("OPENAI_API_KEY"))
+    print("\nSkipping test - Please configure an LLM provider first")
+    return
 
     # Load a test file
     df = pd.read_csv("bank_data/bank_account_00.csv")
@@ -80,10 +81,9 @@ def example_3_compare_prompts():
 
     print(f"\nAvailable styles: {', '.join(styles)}")
 
-    # Test one prompt from each style
-    llm = LLMFactory.create("mock", accuracy=0.8)
-    tester = LLMTester(llm)
-    evaluator = MetricsEvaluator()
+    # Note: Configure LLM provider (openai, anthropic, or ollama)
+    print("\nSkipping test - Please configure an LLM provider first")
+    return
 
     # Load test data
     df = pd.read_csv("bank_data/bank_account_00.csv")
@@ -122,24 +122,22 @@ def example_3_compare_prompts():
 def example_4_optimization():
     """Example 4: Run full optimization."""
     print("\n" + "="*70)
-    print("EXAMPLE 4: Full Optimization (Mock LLM)")
+    print("EXAMPLE 4: Full Optimization")
     print("="*70)
 
-    orchestrator = PromptTuningOrchestrator(
-        llm_provider="mock",
-        llm_config={"accuracy": 0.85},
-        max_generations=3,  # Small number for demo
-        population_size=8,
-        num_test_files=3
-    )
+    # Note: Configure LLM provider (openai, anthropic, or ollama)
+    # Example:
+    # orchestrator = PromptTuningOrchestrator(
+    #     llm_provider="openai",
+    #     llm_config={"model": "gpt-4", "api_key": os.getenv("OPENAI_API_KEY")},
+    #     max_generations=3,
+    #     population_size=8,
+    #     num_test_files=3
+    # )
+    # best = orchestrator.run_optimization()
 
-    best = orchestrator.run_optimization()
-
-    print("\n" + "="*70)
-    print("OPTIMIZATION COMPLETE")
-    print("="*70)
-    print(f"Best prompt: {best.template.name}")
-    print(f"Score: {best.fitness:.3f}")
+    print("\nSkipping optimization - Please configure an LLM provider first")
+    print("Set OPENAI_API_KEY or ANTHROPIC_API_KEY environment variable and uncomment code")
 
 
 def example_5_custom_prompt():
@@ -171,10 +169,9 @@ Be thorough and accurate."""
 
     print(f"Created custom template: {custom_template.name}")
 
-    # Test it
-    llm = LLMFactory.create("mock", accuracy=0.9)
-    tester = LLMTester(llm)
-    evaluator = MetricsEvaluator()
+    # Note: Configure LLM provider (openai, anthropic, or ollama)
+    print("\nSkipping test - Please configure an LLM provider first")
+    return
 
     df = pd.read_csv("bank_data/bank_account_00.csv")
     data_str = format_transaction_data(df)

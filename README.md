@@ -4,10 +4,11 @@ An intelligent system that automatically tests, evaluates, and optimizes LLM pro
 
 ## Features
 
+- **NLP Agent Interface**: Interactive natural language agent for easy interaction
 - **Automated Prompt Testing**: Tests multiple prompt formats and styles automatically
 - **Metrics-Driven Optimization**: Uses precision, recall, F1-score, and composite metrics
 - **Genetic Algorithm**: Evolves prompts across generations for continuous improvement
-- **Multiple LLM Support**: Works with OpenAI, Anthropic, Ollama, and mock providers
+- **Multiple LLM Support**: Works with OpenAI, Anthropic, and Ollama providers
 - **Comprehensive Evaluation**: Tracks 10+ performance metrics per prompt
 - **Smart Refinement**: Identifies performance gaps and creates targeted improvements
 
@@ -50,7 +51,32 @@ cd Automated-prompt-tuning-
 pip install -r requirements.txt
 ```
 
-### 2. Generate Sample Data
+### 2. Run NLP Agent (Interactive Mode - Recommended)
+
+```bash
+# Start the interactive NLP agent
+python main.py --mode agent
+
+# Or simply
+python main.py
+```
+
+The NLP agent provides a natural language interface where you can:
+- Configure LLM providers using natural language
+- Generate data by saying "generate data"
+- Run optimizations by saying "optimize prompts for 5 generations"
+- Test specific prompts
+- And more!
+
+Example interaction:
+```
+Agent> configure openai provider
+Agent> generate 30 files
+Agent> optimize prompts for 5 generations
+Agent> show results
+```
+
+### 3. Generate Sample Data (CLI Mode)
 
 ```bash
 # Generate 30 CSV files with bank transaction data
@@ -63,14 +89,7 @@ This creates sample data in the `bank_data/` directory with:
 - Anomalous transactions
 - Ground truth labels for evaluation
 
-### 3. Run Optimization (Mock Mode)
-
-```bash
-# Test with mock LLM (no API key needed)
-python main.py --mode optimize --provider mock --generations 5
-```
-
-### 4. Run with Real LLM
+### 4. Run with LLM Provider (CLI Mode)
 
 #### OpenAI:
 ```bash
@@ -197,7 +216,8 @@ The system identifies specific weaknesses:
 
 ```
 Automated-prompt-tuning-/
-├── main.py                    # Main orchestrator
+├── main.py                    # Main orchestrator and CLI
+├── nlp_agent.py               # NLP agent with natural language interface
 ├── data_generator.py          # Generate sample CSV data
 ├── prompt_templates.py        # Prompt template library
 ├── llm_interface.py           # LLM provider integrations
@@ -255,7 +275,7 @@ Edit `config.json` to customize:
 
 ## Performance Tips
 
-1. **Start with mock mode** to test the system without API costs
+1. **Use the NLP agent** for easier interaction with natural language commands
 2. **Use fewer test files** initially (2-3) for faster iterations
 3. **Increase population size** (20-30) for better exploration
 4. **Run more generations** (8-10) for optimal results
