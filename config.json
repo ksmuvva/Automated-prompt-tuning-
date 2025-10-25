@@ -1,0 +1,43 @@
+{
+  "data_generation": {
+    "num_files": 30,
+    "transactions_per_file": 100,
+    "output_directory": "bank_data"
+  },
+  "optimization": {
+    "max_generations": 5,
+    "population_size": 15,
+    "mutation_rate": 0.3,
+    "elite_size": 5,
+    "num_test_files": 5
+  },
+  "llm_provider": {
+    "type": "openai",
+    "config": {
+      "openai": {
+        "model": "gpt-4",
+        "temperature": 0.0
+      },
+      "anthropic": {
+        "model": "claude-3-5-sonnet-20241022",
+        "temperature": 0.0
+      },
+      "ollama": {
+        "model": "llama2",
+        "base_url": "http://localhost:11434",
+        "temperature": 0.0
+      }
+    }
+  },
+  "metrics": {
+    "weight_high_value": 0.3,
+    "weight_anomaly": 0.5,
+    "weight_response_quality": 0.2
+  },
+  "output": {
+    "results_directory": "results",
+    "save_all_prompts": true,
+    "save_metrics": true,
+    "save_leaderboard": true
+  }
+}
