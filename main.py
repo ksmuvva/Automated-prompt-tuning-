@@ -17,6 +17,7 @@ from llm_interface import LLMFactory, LLMTester, format_transaction_data
 from metrics_evaluator import MetricsEvaluator, MetricsTracker
 from prompt_optimizer import PromptOptimizer, AdaptiveOptimizer, PromptCandidate
 from nlp_agent import NLPAgent
+from enhanced_agent import EnhancedAgent
 
 
 class PromptTuningOrchestrator:
@@ -323,7 +324,10 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  # Interactive NLP Agent mode (recommended)
+  # Enhanced Agent with guided workflow (RECOMMENDED)
+  python main.py --mode enhanced
+
+  # Interactive NLP Agent mode
   python main.py --mode agent
 
   # Generate sample data
@@ -341,8 +345,8 @@ Examples:
   python main.py --mode quick-test --provider openai --prompt-name concise_direct
         """
     )
-    parser.add_argument("--mode", choices=["agent", "generate", "optimize", "quick-test"],
-                       default="agent", help="Mode to run (default: agent)")
+    parser.add_argument("--mode", choices=["enhanced", "agent", "generate", "optimize", "quick-test"],
+                       default="enhanced", help="Mode to run (default: enhanced)")
     parser.add_argument("--provider", choices=["openai", "anthropic", "ollama"],
                        help="LLM provider (required for optimize/quick-test modes)")
     parser.add_argument("--model", type=str, help="Model name (provider-specific)")
@@ -354,7 +358,12 @@ Examples:
 
     args = parser.parse_args()
 
-    if args.mode == "agent":
+    if args.mode == "enhanced":
+        # Run Enhanced Agent with guided workflow
+        agent = EnhancedAgent()
+        agent.run_guided_workflow()
+
+    elif args.mode == "agent":
         # Run NLP Agent in interactive mode
         agent = NLPAgent()
         agent.run_interactive()

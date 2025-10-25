@@ -4,7 +4,15 @@ An intelligent system that automatically tests, evaluates, and optimizes LLM pro
 
 ## Features
 
-- **NLP Agent Interface**: Interactive natural language agent for easy interaction
+- **🌟 Enhanced Agent with Guided Workflow**: Step-by-step guided process with reasoning & explainability
+  - Automated API key validation
+  - Use case determination with LLM reasoning
+  - Interactive data requirements gathering
+  - LLM-based metrics prescription with human validation
+  - Dynamic prompt generation
+  - Bias detection across all stages
+  - Complete reasoning logs for transparency
+- **NLP Agent Interface**: Interactive natural language agent for quick tasks
 - **Automated Prompt Testing**: Tests multiple prompt formats and styles automatically
 - **Metrics-Driven Optimization**: Uses precision, recall, F1-score, and composite metrics
 - **Genetic Algorithm**: Evolves prompts across generations for continuous improvement
@@ -51,24 +59,107 @@ cd Automated-prompt-tuning-
 pip install -r requirements.txt
 ```
 
-### 2. Run NLP Agent (Interactive Mode - Recommended)
+### 2. Run Enhanced Agent - Guided Workflow (🌟 RECOMMENDED)
 
 ```bash
-# Start the interactive NLP agent
-python main.py --mode agent
+# Start the enhanced agent with full guided workflow
+python main.py --mode enhanced
 
-# Or simply
+# Or simply (enhanced is now the default)
 python main.py
 ```
 
-The NLP agent provides a natural language interface where you can:
-- Configure LLM providers using natural language
-- Generate data by saying "generate data"
-- Run optimizations by saying "optimize prompts for 5 generations"
-- Test specific prompts
-- And more!
+The Enhanced Agent provides a **complete guided workflow** with reasoning and explainability:
 
-Example interaction:
+**10-Step Guided Process:**
+
+1. **API Key Validation** - Automatically checks for available LLM providers
+2. **LLM Provider Configuration** - Guides you through provider setup
+3. **Use Case Determination** - Uses LLM reasoning to understand your needs OR accepts your defined use case
+4. **Data Requirements Gathering** - Interactive questions about your data needs
+5. **Synthetic Data Generation** - Creates data based on your specifications
+6. **Ground Truth Generation** - Generates labels and statistics
+7. **Metrics Prescription** - LLM recommends appropriate evaluation metrics
+8. **Human Validation** - You review and approve/modify suggested metrics
+9. **Prompt Loading/Generation** - Load existing or generate new prompts dynamically
+10. **Optimization** - Run the full optimization with reasoning logs
+
+**Key Features:**
+- ✅ **Reasoning & Explainability**: Every decision is logged with reasoning
+- ✅ **Bias Detection**: Automatic bias checking at each stage
+- ✅ **Human-in-the-Loop**: You validate critical decisions
+- ✅ **Workflow State Saving**: Resume work from any step
+- ✅ **Complete Transparency**: View reasoning logs anytime
+
+**Example Session:**
+```bash
+$ python main.py
+
+╔══════════════════════════════════════════════════════════════╗
+║      Enhanced Prompt Tuning Agent with Reasoning            ║
+║      Version 2.0 - With Explainability & Bias Detection     ║
+╚══════════════════════════════════════════════════════════════╝
+
+============================================================
+STEP 1: API KEY VALIDATION
+============================================================
+
+Checking for available LLM providers:
+  OpenAI       : ✓ Available
+  Anthropic    : ✓ Available
+  Ollama       : ✓ Available
+
+============================================================
+STEP 2: LLM PROVIDER CONFIGURATION
+============================================================
+
+Available providers: openai, anthropic, ollama
+
+Select provider (openai/anthropic/ollama): openai
+Enter model (default: gpt-4):
+
+🔧 Initializing openai with model gpt-4...
+✓ Openai configured successfully!
+
+============================================================
+STEP 3: USE CASE DETERMINATION
+============================================================
+
+Do you already know your use case?
+(yes/no): no
+
+Let me help you determine the use case.
+Please provide information about your needs:
+
+1. What problem are you trying to solve? Detect fraudulent transactions
+2. What type of data will you work with? Bank transaction data
+3. What are your main goals? Identify high-value and suspicious transactions
+4. Any specific constraints or requirements? Need high precision
+
+🤔 Analyzing your requirements with LLM reasoning...
+
+✓ Use case determined!
+
+📋 Use Case: Fraud Detection in Bank Transactions
+   Type: fraud_detection
+   Domain: finance
+
+💭 Reasoning: Based on the user's goal to detect fraudulent and high-value
+transactions in banking data, this is a fraud detection use case requiring
+anomaly detection capabilities with emphasis on precision.
+   Confidence: 92%
+
+... [Continues through all 10 steps with reasoning]
+```
+
+### 3. Run Quick NLP Agent (For Quick Tasks)
+
+```bash
+# Start the simple interactive NLP agent
+python main.py --mode agent
+```
+
+The simple NLP agent provides a natural language interface for quick operations:
 ```
 Agent> configure openai provider
 Agent> generate 30 files
@@ -76,7 +167,7 @@ Agent> optimize prompts for 5 generations
 Agent> show results
 ```
 
-### 3. Generate Sample Data (CLI Mode)
+### 4. Generate Sample Data (CLI Mode)
 
 ```bash
 # Generate 30 CSV files with bank transaction data
@@ -89,7 +180,7 @@ This creates sample data in the `bank_data/` directory with:
 - Anomalous transactions
 - Ground truth labels for evaluation
 
-### 4. Run with LLM Provider (CLI Mode)
+### 5. Run with LLM Provider (CLI Mode)
 
 #### OpenAI:
 ```bash
@@ -111,7 +202,37 @@ python main.py --mode optimize --provider ollama --model llama2 --generations 5
 
 ## CLI Usage Guide
 
-The system provides **two CLI interfaces** for different use cases:
+The system provides **three CLI interfaces** for different use cases:
+
+### 0. Enhanced Agent - Guided Workflow (🌟 BEST FOR BEGINNERS)
+
+The Enhanced Agent is a **step-by-step guided workflow** perfect for new users or complex projects.
+
+**Start Command:**
+```bash
+python main.py --mode enhanced
+# or just
+python main.py
+```
+
+**Features:**
+- ✅ Guided 10-step workflow
+- ✅ LLM-powered reasoning at each step
+- ✅ Automatic use case determination
+- ✅ Interactive data requirements gathering
+- ✅ Metrics prescription with human validation
+- ✅ Dynamic prompt generation
+- ✅ Bias detection and explainability
+- ✅ Workflow state saving/resuming
+
+**When to Use:**
+- First time using the system
+- Complex or unfamiliar use cases
+- Need transparency and explainability
+- Want LLM assistance in decision-making
+
+---
+
 
 ### 1. Interactive NLP CLI (Recommended for Interactive Use)
 
@@ -365,26 +486,30 @@ The system identifies specific weaknesses:
 
 ```
 Automated-prompt-tuning-/
-├── main.py                    # Main orchestrator and CLI
-├── nlp_agent.py               # NLP agent with natural language interface
-├── data_generator.py          # Generate sample CSV data
+├── main.py                    # Main orchestrator and CLI entry point
+├── enhanced_agent.py          # 🌟 Enhanced agent with guided workflow & reasoning
+├── nlp_agent.py               # Quick NLP agent with natural language interface
+├── data_generator.py          # Synthetic data generation
 ├── prompt_templates.py        # Prompt template library
-├── llm_interface.py           # LLM provider integrations
-├── metrics_evaluator.py       # Performance metrics system
+├── llm_interface.py           # LLM provider integrations (OpenAI, Anthropic, Ollama)
+├── metrics_evaluator.py       # Performance metrics evaluation system
 ├── prompt_optimizer.py        # Genetic algorithm optimizer
-├── config.json               # Configuration file
-├── requirements.txt          # Python dependencies
-├── README.md                 # This file
+├── config.json                # Configuration file
+├── requirements.txt           # Python dependencies
+├── README.md                  # This file
 │
-├── bank_data/               # Generated CSV files (30 files)
+├── bank_data/                 # Generated CSV files (30 files)
 │   ├── bank_account_00.csv
 │   ├── bank_account_01.csv
 │   └── ...
 │
-└── results/                 # Output results
-    ├── best_prompt_YYYYMMDD_HHMMSS.txt
-    ├── metrics_YYYYMMDD_HHMMSS.json
-    └── leaderboard_YYYYMMDD_HHMMSS.csv
+├── results/                   # Optimization results
+│   ├── best_prompt_YYYYMMDD_HHMMSS.txt
+│   ├── metrics_YYYYMMDD_HHMMSS.json
+│   └── leaderboard_YYYYMMDD_HHMMSS.csv
+│
+└── workflow_states/           # Enhanced agent workflow states (resumable)
+    └── workflow_YYYYMMDD_HHMMSS.json
 ```
 
 ## Output Files
@@ -424,11 +549,13 @@ Edit `config.json` to customize:
 
 ## Performance Tips
 
-1. **Use the NLP agent** for easier interaction with natural language commands
-2. **Use fewer test files** initially (2-3) for faster iterations
-3. **Increase population size** (20-30) for better exploration
-4. **Run more generations** (8-10) for optimal results
-5. **Adjust weights** based on your priorities (high-value vs anomaly detection)
+1. **Use the Enhanced Agent** for first-time users or complex use cases - it provides guidance at every step
+2. **Use the NLP agent** for quick operations when you know what you need
+3. **Use fewer test files** initially (2-3) for faster iterations
+4. **Increase population size** (20-30) for better exploration
+5. **Run more generations** (8-10) for optimal results
+6. **Adjust weights** based on your priorities (high-value vs anomaly detection)
+7. **Review reasoning logs** in Enhanced Agent for transparency and debugging
 
 ## Advanced Usage
 
