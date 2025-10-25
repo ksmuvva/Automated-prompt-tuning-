@@ -319,7 +319,7 @@ class PromptTuningOrchestrator:
 def main():
     """Main entry point."""
     parser = argparse.ArgumentParser(
-        description="Automated Prompt Tuning System with NLP Agent",
+        description="Automated Prompt Tuning System with USPM Agent",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:

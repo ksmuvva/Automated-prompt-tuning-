@@ -1,6 +1,6 @@
 """
 Example usage of the Automated Prompt Tuning System.
-Demonstrates various ways to use the system.
+Demonstrates various ways to use the system, including the USPM Agent.
 """
 
 from data_generator import BankDataGenerator
@@ -9,7 +9,65 @@ from llm_interface import LLMFactory, LLMTester, format_transaction_data
 from metrics_evaluator import MetricsEvaluator
 from prompt_optimizer import PromptOptimizer
 from main import PromptTuningOrchestrator
+from uspm_agent import USPMAgent
 import pandas as pd
+import os
+
+
+def example_0_uspm_agent():
+    """Example 0: Using USPM Agent with different LLM providers."""
+    print("="*70)
+    print("EXAMPLE 0: USPM Agent - Unified Smart Prompt Management")
+    print("="*70)
+
+    print("\n--- USPM Agent with Different Providers ---\n")
+
+    # Example 1: OpenAI
+    print("# OpenAI (GPT-4)")
+    print("agent = USPMAgent(mode='guided')  # or mode='quick'")
+    print("# Set environment: export OPENAI_API_KEY='your-key'")
+    print("agent.run_interactive()\n")
+
+    # Example 2: Anthropic
+    print("# Anthropic (Claude)")
+    print("agent = USPMAgent(mode='guided')")
+    print("# Set environment: export ANTHROPIC_API_KEY='your-key'")
+    print("agent.run_interactive()\n")
+
+    # Example 3: Ollama (Local)
+    print("# Local models (Ollama)")
+    print("agent = USPMAgent(mode='quick')")
+    print("# Ensure Ollama is running: ollama serve")
+    print("agent.run_interactive()\n")
+
+    print("--- Two Modes Available ---\n")
+    print("1. Guided Mode (mode='guided'):")
+    print("   - Full 10-step interactive workflow")
+    print("   - AI reasoning & explainability")
+    print("   - Bias detection & human validation")
+    print("   - Perfect for first-time users\n")
+
+    print("2. Quick Mode (mode='quick'):")
+    print("   - Fast natural language commands")
+    print("   - Direct task execution")
+    print("   - Expert-friendly interface")
+    print("   - Example: 'optimize prompts for 10 generations'\n")
+
+    print("--- Programmatic Usage ---\n")
+    print("# Guided mode - Full workflow")
+    print("agent_guided = USPMAgent(mode='guided')")
+    print("agent_guided.run_interactive()\n")
+
+    print("# Quick mode - Execute specific tasks")
+    print("agent_quick = USPMAgent(mode='quick')")
+    print("task = agent_quick.parse_intent('generate 50 files with 200 transactions')")
+    print("result = agent_quick.execute_task(task)")
+    print("print(result)\n")
+
+    print("# Switch modes anytime")
+    print("agent = USPMAgent(mode='quick')")
+    print("agent.switch_mode('guided')  # Switch from quick to guided")
+    print("\nNote: Set your LLM API keys as environment variables before running")
 
 
 def example_1_generate_data():
@@ -222,13 +280,18 @@ def main():
 ╚══════════════════════════════════════════════════════════════════════╝
 """)
 
+    # Show USPM Agent examples first
+    try:
+        example_0_uspm_agent()
+    except Exception as e:
+        print(f"Example 0 error: {e}")
+
     # Check if data exists, generate if not
-    import os
     if not os.path.exists("bank_data"):
-        print("Generating sample data first...")
+        print("\nGenerating sample data first...")
         example_1_generate_data()
     else:
-        print("Using existing data in bank_data/")
+        print("\nUsing existing data in bank_data/")
 
     # Run examples
     try:
