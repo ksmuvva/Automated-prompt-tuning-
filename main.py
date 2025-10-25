@@ -16,8 +16,7 @@ from prompt_templates import PromptTemplateLibrary
 from llm_interface import LLMFactory, LLMTester, format_transaction_data
 from metrics_evaluator import MetricsEvaluator, MetricsTracker
 from prompt_optimizer import PromptOptimizer, AdaptiveOptimizer, PromptCandidate
-from nlp_agent import NLPAgent
-from enhanced_agent import EnhancedAgent
+from uspm_agent import USPMAgent
 
 
 class PromptTuningOrchestrator:
@@ -324,11 +323,11 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  # Enhanced Agent with guided workflow (RECOMMENDED)
-  python main.py --mode enhanced
+  # USPM Agent in guided mode with full workflow (RECOMMENDED)
+  python main.py --mode guided
 
-  # Interactive NLP Agent mode
-  python main.py --mode agent
+  # USPM Agent in quick mode for fast commands
+  python main.py --mode quick
 
   # Generate sample data
   python main.py --mode generate
@@ -345,8 +344,8 @@ Examples:
   python main.py --mode quick-test --provider openai --prompt-name concise_direct
         """
     )
-    parser.add_argument("--mode", choices=["enhanced", "agent", "generate", "optimize", "quick-test"],
-                       default="enhanced", help="Mode to run (default: enhanced)")
+    parser.add_argument("--mode", choices=["guided", "quick", "generate", "optimize", "quick-test"],
+                       default="guided", help="Mode to run (default: guided)")
     parser.add_argument("--provider", choices=["openai", "anthropic", "ollama"],
                        help="LLM provider (required for optimize/quick-test modes)")
     parser.add_argument("--model", type=str, help="Model name (provider-specific)")
@@ -358,14 +357,14 @@ Examples:
 
     args = parser.parse_args()
 
-    if args.mode == "enhanced":
-        # Run Enhanced Agent with guided workflow
-        agent = EnhancedAgent()
-        agent.run_guided_workflow()
+    if args.mode == "guided":
+        # Run USPM Agent in guided mode (full workflow with reasoning)
+        agent = USPMAgent(mode="guided")
+        agent.run_interactive()
 
-    elif args.mode == "agent":
-        # Run NLP Agent in interactive mode
-        agent = NLPAgent()
+    elif args.mode == "quick":
+        # Run USPM Agent in quick mode (natural language commands)
+        agent = USPMAgent(mode="quick")
         agent.run_interactive()
 
     elif args.mode == "generate":

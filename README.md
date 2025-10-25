@@ -4,15 +4,19 @@ An intelligent system that automatically tests, evaluates, and optimizes LLM pro
 
 ## Features
 
-- **🌟 Enhanced Agent with Guided Workflow**: Step-by-step guided process with reasoning & explainability
-  - Automated API key validation
-  - Use case determination with LLM reasoning
-  - Interactive data requirements gathering
-  - LLM-based metrics prescription with human validation
-  - Dynamic prompt generation
-  - Bias detection across all stages
-  - Complete reasoning logs for transparency
-- **NLP Agent Interface**: Interactive natural language agent for quick tasks
+- **🌟 USPM Agent - Unified Smart Prompt Management**:
+  - **Guided Mode**: Full 10-step workflow with reasoning & explainability
+    - Automated API key validation
+    - Use case determination with LLM reasoning
+    - Interactive data requirements gathering
+    - LLM-based metrics prescription with human validation
+    - Dynamic prompt generation
+    - Bias detection across all stages
+    - Complete reasoning logs for transparency
+  - **Quick Mode**: Fast natural language command execution
+    - Instant command recognition
+    - Context-aware operation
+    - Seamless mode switching
 - **Automated Prompt Testing**: Tests multiple prompt formats and styles automatically
 - **Metrics-Driven Optimization**: Uses precision, recall, F1-score, and composite metrics
 - **Genetic Algorithm**: Evolves prompts across generations for continuous improvement
@@ -59,17 +63,17 @@ cd Automated-prompt-tuning-
 pip install -r requirements.txt
 ```
 
-### 2. Run Enhanced Agent - Guided Workflow (🌟 RECOMMENDED)
+### 2. Run USPM Agent - Guided Mode (🌟 RECOMMENDED)
 
 ```bash
-# Start the enhanced agent with full guided workflow
-python main.py --mode enhanced
+# Start USPM agent in guided mode with full workflow
+python main.py --mode guided
 
-# Or simply (enhanced is now the default)
+# Or simply (guided is now the default)
 python main.py
 ```
 
-The Enhanced Agent provides a **complete guided workflow** with reasoning and explainability:
+The USPM Agent in **Guided Mode** provides a complete workflow with reasoning and explainability:
 
 **10-Step Guided Process:**
 
@@ -96,8 +100,8 @@ The Enhanced Agent provides a **complete guided workflow** with reasoning and ex
 $ python main.py
 
 ╔══════════════════════════════════════════════════════════════╗
-║      Enhanced Prompt Tuning Agent with Reasoning            ║
-║      Version 2.0 - With Explainability & Bias Detection     ║
+║         USPM Agent - Unified Smart Prompt Management        ║
+║              GUIDED MODE - Full Workflow with Reasoning      ║
 ╚══════════════════════════════════════════════════════════════╝
 
 ============================================================
@@ -152,19 +156,20 @@ anomaly detection capabilities with emphasis on precision.
 ... [Continues through all 10 steps with reasoning]
 ```
 
-### 3. Run Quick NLP Agent (For Quick Tasks)
+### 3. Run USPM Agent - Quick Mode (For Fast Operations)
 
 ```bash
-# Start the simple interactive NLP agent
-python main.py --mode agent
+# Start USPM agent in quick mode for natural language commands
+python main.py --mode quick
 ```
 
-The simple NLP agent provides a natural language interface for quick operations:
+The USPM Agent in **Quick Mode** provides fast natural language command execution:
 ```
-Agent> configure openai provider
-Agent> generate 30 files
-Agent> optimize prompts for 5 generations
-Agent> show results
+USPM> configure openai provider
+USPM> generate 30 files
+USPM> optimize prompts for 5 generations
+USPM> show results
+USPM> guided mode  (switch to guided mode anytime)
 ```
 
 ### 4. Generate Sample Data (CLI Mode)
@@ -202,15 +207,19 @@ python main.py --mode optimize --provider ollama --model llama2 --generations 5
 
 ## CLI Usage Guide
 
-The system provides **three CLI interfaces** for different use cases:
+The system provides **one unified USPM Agent** with two operating modes:
 
-### 0. Enhanced Agent - Guided Workflow (🌟 BEST FOR BEGINNERS)
+### USPM Agent - Unified Smart Prompt Management (🌟 RECOMMENDED)
 
-The Enhanced Agent is a **step-by-step guided workflow** perfect for new users or complex projects.
+The USPM Agent merges the best of both guided workflows and quick commands into a single, intelligent agent.
+
+**Operating Modes:**
+
+#### 1. Guided Mode - Full Workflow (Best for Beginners)
 
 **Start Command:**
 ```bash
-python main.py --mode enhanced
+python main.py --mode guided
 # or just
 python main.py
 ```
@@ -233,17 +242,14 @@ python main.py
 
 ---
 
+#### 2. Quick Mode - Fast Commands (Best for Experts)
 
-### 1. Interactive NLP CLI (Recommended for Interactive Use)
-
-The NLP agent provides a conversational interface with natural language commands.
-
-**Start the Agent:**
+**Start Command:**
 ```bash
-python main.py --mode agent
-# or simply
-python main.py
+python main.py --mode quick
 ```
+
+The Quick Mode provides a conversational interface with natural language commands.
 
 **Available Commands:**
 
@@ -257,68 +263,67 @@ python main.py
 | **List Prompts** | Show available prompts | `list prompts`<br>`show available prompts` |
 | **Show Results** | Display last results | `show results`<br>`display last results` |
 | **Help** | Show help | `help`<br>`what can you do` |
+| **Switch Mode** | Switch to guided mode | `guided mode`<br>`full workflow` |
 | **Exit** | Quit the agent | `exit`<br>`quit`<br>`q` |
 
 **Example Session:**
 ```bash
-$ python main.py
+$ python main.py --mode quick
 
-============================================================
-NLP Agent - Interactive Mode
-============================================================
-Type 'help' for available commands or 'exit' to quit.
-============================================================
+╔══════════════════════════════════════════════════════════════╗
+║         USPM Agent - Unified Smart Prompt Management        ║
+║              QUICK MODE - Natural Language Commands          ║
+╚══════════════════════════════════════════════════════════════╝
 
-Agent> configure openai provider
+Type 'help' for available commands or 'guided mode' to switch.
+
+USPM> configure openai provider
 
 Provider configured successfully!
 Provider: openai
 Model: gpt-4
 
-Agent> generate 30 files
+USPM> generate 30 files
 
 Generating 30 files with 100 transactions each...
 
-Data generation complete!
+✓ Data generation complete!
 Files created: 30
 Transactions per file: 100
 
-Statistics:
-  total_transactions: 3000
-  high_value_transactions: 450
-  anomalous_transactions: 150
-
-Agent> optimize prompts for 5 generations
+USPM> optimize prompts for 5 generations
 
 [Understanding: optimize_prompts]
 
-Running optimization for 5 generations...
+🔄 Running optimization for 5 generations...
 
-======================================================================
-AUTOMATED PROMPT TUNING SYSTEM
-======================================================================
-[... optimization runs ...]
+✓ Optimization complete! Best prompt: detailed_analytical (Score: 0.847)
 
-Optimization complete! Best prompt: detailed_analytical (Score: 0.847)
+USPM> show results
 
-Agent> show results
-
-Last Results:
-==================================================
+📊 Last Results:
 Prompt: detailed_analytical
 Score: 0.847
-High-Value F1: 0.92
-Anomaly F1: 0.85
-Response Time: 1.2s
 
-Agent> exit
+USPM> guided mode
 
-Goodbye!
+🔄 Switching from quick mode to guided mode...
+
+╔══════════════════════════════════════════════════════════════╗
+║         USPM Agent - Unified Smart Prompt Management        ║
+║              GUIDED MODE - Full Workflow with Reasoning      ║
+╚══════════════════════════════════════════════════════════════╝
+
+🚀 Starting USPM Agent Guided Workflow
+
+USPM> exit
+
+👋 Goodbye!
 ```
 
 ---
 
-### 2. Traditional CLI (Recommended for Scripting/Automation)
+### Traditional CLI (For Scripting/Automation)
 
 The traditional CLI uses command-line arguments for non-interactive use.
 
@@ -326,7 +331,8 @@ The traditional CLI uses command-line arguments for non-interactive use.
 
 | Mode | Description | Command |
 |------|-------------|---------|
-| `agent` | Start interactive NLP agent (default) | `python main.py --mode agent` |
+| `guided` | Start USPM agent in guided mode (default) | `python main.py --mode guided` |
+| `quick` | Start USPM agent in quick mode | `python main.py --mode quick` |
 | `generate` | Generate sample data | `python main.py --mode generate` |
 | `optimize` | Run prompt optimization | `python main.py --mode optimize --provider openai` |
 | `quick-test` | Quick test prompts | `python main.py --mode quick-test --provider openai` |
@@ -392,13 +398,13 @@ python main.py --help
 
 ---
 
-### 3. Using the API Programmatically
+### Using the API Programmatically
 
 For advanced use cases, you can import and use the classes directly in Python:
 
 ```python
 from main import PromptTuningOrchestrator
-from nlp_agent import NLPAgent
+from uspm_agent import USPMAgent
 
 # Method 1: Use the orchestrator directly
 orchestrator = PromptTuningOrchestrator(
@@ -412,10 +418,14 @@ best_prompt = orchestrator.run_optimization()
 print(f"Best prompt: {best_prompt.template.name}")
 print(f"Score: {best_prompt.fitness:.3f}")
 
-# Method 2: Use the NLP agent programmatically
-agent = NLPAgent()
-result = agent.run_command("configure openai provider")
-result = agent.run_command("optimize prompts for 5 generations")
+# Method 2: Use USPM agent in guided mode
+agent = USPMAgent(mode="guided")
+agent.run_interactive()
+
+# Method 3: Use USPM agent in quick mode
+agent = USPMAgent(mode="quick")
+result = agent.parse_intent("configure openai provider")
+agent.execute_task(result)
 ```
 
 ## How It Works
@@ -487,8 +497,8 @@ The system identifies specific weaknesses:
 ```
 Automated-prompt-tuning-/
 ├── main.py                    # Main orchestrator and CLI entry point
-├── enhanced_agent.py          # 🌟 Enhanced agent with guided workflow & reasoning
-├── nlp_agent.py               # Quick NLP agent with natural language interface
+├── uspm_agent.py              # 🌟 USPM Agent - Unified Smart Prompt Management
+│                              #    (Guided Mode + Quick Mode)
 ├── data_generator.py          # Synthetic data generation
 ├── prompt_templates.py        # Prompt template library
 ├── llm_interface.py           # LLM provider integrations (OpenAI, Anthropic, Ollama)
@@ -497,6 +507,7 @@ Automated-prompt-tuning-/
 ├── config.json                # Configuration file
 ├── requirements.txt           # Python dependencies
 ├── README.md                  # This file
+├── AGENTS_SUMMARY.md          # Complete agent documentation
 │
 ├── bank_data/                 # Generated CSV files (30 files)
 │   ├── bank_account_00.csv
@@ -508,8 +519,8 @@ Automated-prompt-tuning-/
 │   ├── metrics_YYYYMMDD_HHMMSS.json
 │   └── leaderboard_YYYYMMDD_HHMMSS.csv
 │
-└── workflow_states/           # Enhanced agent workflow states (resumable)
-    └── workflow_YYYYMMDD_HHMMSS.json
+└── workflow_states/           # USPM agent workflow states (resumable)
+    └── uspm_workflow_YYYYMMDD_HHMMSS.json
 ```
 
 ## Output Files
@@ -549,13 +560,14 @@ Edit `config.json` to customize:
 
 ## Performance Tips
 
-1. **Use the Enhanced Agent** for first-time users or complex use cases - it provides guidance at every step
-2. **Use the NLP agent** for quick operations when you know what you need
-3. **Use fewer test files** initially (2-3) for faster iterations
-4. **Increase population size** (20-30) for better exploration
-5. **Run more generations** (8-10) for optimal results
-6. **Adjust weights** based on your priorities (high-value vs anomaly detection)
-7. **Review reasoning logs** in Enhanced Agent for transparency and debugging
+1. **Use USPM Agent in Guided Mode** for first-time users or complex use cases - it provides guidance at every step
+2. **Use USPM Agent in Quick Mode** for fast operations when you know what you need
+3. **Switch modes anytime** - type "guided mode" in quick mode to get full workflow assistance
+4. **Use fewer test files** initially (2-3) for faster iterations
+5. **Increase population size** (20-30) for better exploration
+6. **Run more generations** (8-10) for optimal results
+7. **Adjust weights** based on your priorities (high-value vs anomaly detection)
+8. **Review reasoning logs** via `agent.show_reasoning_log()` for transparency and debugging
 
 ## Advanced Usage
 
