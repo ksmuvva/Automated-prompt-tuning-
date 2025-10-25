@@ -402,31 +402,516 @@ python main.py --help
 
 For advanced use cases, you can import and use the classes directly in Python:
 
+#### USPM Agent - Complete API Examples
+
+##### Example 1: Initialize with OpenAI
 ```python
-from main import PromptTuningOrchestrator
+from uspm_agent import USPMAgent
+import os
+
+# Set API key
+os.environ['OPENAI_API_KEY'] = 'your-api-key'
+
+# Initialize USPM Agent in guided mode
+agent = USPMAgent(
+    mode='guided',              # 'guided' or 'quick'
+    data_dir='bank_data',       # Directory for data files
+    results_dir='results'       # Directory for results
+)
+
+# Run the complete guided workflow
+agent.run_interactive()
+```
+
+##### Example 2: Initialize with Anthropic Claude
+```python
+from uspm_agent import USPMAgent
+import os
+
+# Set API key
+os.environ['ANTHROPIC_API_KEY'] = 'your-api-key'
+
+# Initialize and run
+agent = USPMAgent(mode='guided')
+agent.run_interactive()
+```
+
+##### Example 3: Initialize with Ollama (Local Models)
+```python
 from uspm_agent import USPMAgent
 
-# Method 1: Use the orchestrator directly
+# No API key needed for Ollama
+# Make sure Ollama is running: ollama serve
+
+agent = USPMAgent(mode='guided')
+agent.run_interactive()
+```
+
+##### Example 4: Quick Mode - Programmatic Task Execution
+```python
+from uspm_agent import USPMAgent
+
+# Initialize in quick mode
+agent = USPMAgent(mode='quick')
+
+# Configure provider
+task = agent.parse_intent("configure openai provider")
+result = agent.execute_task(task)
+print(result)
+
+# Generate data
+task = agent.parse_intent("generate 30 files with 100 transactions")
+result = agent.execute_task(task)
+print(result)
+
+# Run optimization
+task = agent.parse_intent("optimize prompts for 5 generations")
+result = agent.execute_task(task)
+print(result)
+
+# Show results
+task = agent.parse_intent("show results")
+result = agent.execute_task(task)
+print(result)
+```
+
+##### Example 5: Access Reasoning Logs & Explainability
+```python
+from uspm_agent import USPMAgent
+
+# Run guided workflow
+agent = USPMAgent(mode='guided')
+agent.run_interactive()
+
+# After workflow completes, access reasoning logs
+agent.show_reasoning_log()
+
+# Access specific reasoning data
+for log in agent.reasoning_logs:
+    print(f"Stage: {log.stage}")
+    print(f"Action: {log.action}")
+    print(f"Reasoning: {log.reasoning}")
+    print(f"Confidence: {log.confidence}")
+    print(f"Bias Check: {log.bias_check}")
+    print(f"Timestamp: {log.timestamp}")
+    print("---")
+```
+
+##### Example 6: Mode Switching
+```python
+from uspm_agent import USPMAgent
+
+# Start in quick mode
+agent = USPMAgent(mode='quick')
+
+# Do some quick tasks
+agent.execute_task(agent.parse_intent("generate data"))
+
+# Switch to guided mode for full workflow
+agent.switch_mode('guided')
+agent.run_interactive()
+```
+
+##### Example 7: Access Workflow State
+```python
+from uspm_agent import USPMAgent
+
+agent = USPMAgent(mode='guided')
+agent.run_interactive()
+
+# Access determined use case
+if agent.use_case_context:
+    print(f"Use Case: {agent.use_case_context.use_case_name}")
+    print(f"Type: {agent.use_case_context.use_case_type}")
+    print(f"Domain: {agent.use_case_context.domain}")
+    print(f"Reasoning: {agent.use_case_context.reasoning}")
+    print(f"Confidence: {agent.use_case_context.confidence}")
+
+# Access data requirements
+if agent.data_requirements:
+    print(f"Files: {agent.data_requirements.num_files}")
+    print(f"Records per file: {agent.data_requirements.records_per_file}")
+    print(f"Features: {agent.data_requirements.features}")
+
+# Access prescribed metrics
+if agent.metrics_prescription:
+    print(f"Primary metrics: {agent.metrics_prescription.primary_metrics}")
+    print(f"Secondary metrics: {agent.metrics_prescription.secondary_metrics}")
+    print(f"Reasoning: {agent.metrics_prescription.reasoning}")
+```
+
+##### Example 8: Traditional Orchestrator (Low-Level API)
+```python
+from main import PromptTuningOrchestrator
+
+# Use the orchestrator directly for custom workflows
 orchestrator = PromptTuningOrchestrator(
     llm_provider="openai",
     llm_config={"model": "gpt-4", "api_key": "your-key"},
     max_generations=5,
-    population_size=15
+    population_size=15,
+    num_test_files=5,
+    data_dir="bank_data",
+    results_dir="results"
 )
 
+# Run optimization
 best_prompt = orchestrator.run_optimization()
 print(f"Best prompt: {best_prompt.template.name}")
 print(f"Score: {best_prompt.fitness:.3f}")
 
-# Method 2: Use USPM agent in guided mode
-agent = USPMAgent(mode="guided")
-agent.run_interactive()
-
-# Method 3: Use USPM agent in quick mode
-agent = USPMAgent(mode="quick")
-result = agent.parse_intent("configure openai provider")
-agent.execute_task(result)
+# Or quick test a specific prompt
+orchestrator.quick_test("concise_direct")
 ```
+
+---
+
+### USPMAgent API Reference
+
+#### Class: `USPMAgent`
+
+**Description:** Unified Smart Prompt Management Agent combining guided workflows and quick commands.
+
+##### Constructor
+
+```python
+USPMAgent(mode='guided', data_dir='bank_data', results_dir='results')
+```
+
+**Parameters:**
+- `mode` (str): Operating mode - `'guided'` for full workflow or `'quick'` for fast commands. Default: `'guided'`
+- `data_dir` (str): Directory path for data files. Default: `'bank_data'`
+- `results_dir` (str): Directory path for results. Default: `'results'`
+
+**Returns:** USPMAgent instance
+
+---
+
+##### Instance Attributes
+
+**Shared Attributes (Both Modes):**
+- `mode` (AgentMode): Current operating mode (GUIDED or QUICK)
+- `llm_provider` (LLMProvider): Configured LLM provider instance
+- `llm_tester` (LLMTester): LLM testing interface
+- `provider_type` (str): Provider type ('openai', 'anthropic', 'ollama')
+- `reasoning_logs` (List[ReasoningLog]): Complete reasoning log for explainability
+
+**Guided Mode Attributes:**
+- `current_stage` (WorkflowStage): Current workflow stage
+- `use_case_context` (UseCaseContext): Determined use case information
+- `data_requirements` (DataRequirements): Data generation requirements
+- `metrics_prescription` (MetricsPrescription): LLM-prescribed metrics
+- `generated_data_path` (str): Path to generated data
+- `ground_truth` (dict): Ground truth labels and statistics
+- `validation_results` (dict): Human validation results
+
+**Quick Mode Attributes:**
+- `context` (dict): Task execution context including:
+  - `last_task`: Last executed task type
+  - `last_results`: Last execution results
+  - `provider_configured`: Provider configuration status
+
+---
+
+##### Main Methods
+
+###### `run_interactive()`
+Run the agent in interactive mode.
+
+```python
+agent = USPMAgent(mode='guided')
+agent.run_interactive()
+```
+
+**Behavior:**
+- **Guided Mode**: Runs complete 10-step workflow
+- **Quick Mode**: Starts interactive command prompt
+
+**Returns:** None
+
+---
+
+###### `switch_mode(new_mode)`
+Switch between guided and quick modes.
+
+```python
+agent.switch_mode('guided')  # Switch to guided mode
+agent.switch_mode('quick')   # Switch to quick mode
+```
+
+**Parameters:**
+- `new_mode` (str): Target mode ('guided' or 'quick')
+
+**Returns:** None
+
+---
+
+###### `show_reasoning_log()`
+Display the complete reasoning and explainability log.
+
+```python
+agent.show_reasoning_log()
+```
+
+**Returns:** None (prints to console)
+
+---
+
+##### Guided Mode Methods
+
+###### `validate_api_keys()`
+Check for available LLM provider API keys.
+
+```python
+has_keys, key_status = agent.validate_api_keys()
+```
+
+**Returns:**
+- `has_keys` (bool): Whether any keys were found
+- `key_status` (dict): Status for each provider
+
+---
+
+###### `configure_llm_provider(key_status, provider=None)`
+Configure the LLM provider interactively or programmatically.
+
+```python
+agent.configure_llm_provider(key_status)
+# or
+agent.configure_llm_provider(key_status, provider='openai')
+```
+
+**Parameters:**
+- `key_status` (dict): Available provider keys
+- `provider` (str, optional): Specific provider to configure
+
+**Returns:** bool (success status)
+
+---
+
+###### `determine_use_case()`
+Use LLM reasoning to determine the use case or accept user input.
+
+```python
+agent.determine_use_case()
+```
+
+**Side Effects:** Sets `agent.use_case_context`
+
+**Returns:** None
+
+---
+
+###### `gather_data_requirements()`
+Interactively gather data generation requirements from user.
+
+```python
+agent.gather_data_requirements()
+```
+
+**Side Effects:** Sets `agent.data_requirements`
+
+**Returns:** None
+
+---
+
+###### `generate_synthetic_data()`
+Generate synthetic data based on gathered requirements.
+
+```python
+agent.generate_synthetic_data()
+```
+
+**Side Effects:**
+- Creates data files in `data_dir`
+- Sets `agent.generated_data_path`
+
+**Returns:** None
+
+---
+
+###### `generate_ground_truth()`
+Generate ground truth labels and statistics for evaluation.
+
+```python
+agent.generate_ground_truth()
+```
+
+**Side Effects:** Sets `agent.ground_truth`
+
+**Returns:** None
+
+---
+
+###### `prescribe_metrics_with_llm()`
+Use LLM to prescribe appropriate evaluation metrics.
+
+```python
+agent.prescribe_metrics_with_llm()
+```
+
+**Side Effects:** Sets `agent.metrics_prescription`
+
+**Returns:** None
+
+---
+
+###### `validate_metrics_with_human()`
+Present prescribed metrics to user for validation/modification.
+
+```python
+approved = agent.validate_metrics_with_human()
+```
+
+**Returns:** bool (whether user approved metrics)
+
+---
+
+###### `load_or_generate_prompts()`
+Load existing prompt templates or generate new ones dynamically.
+
+```python
+templates = agent.load_or_generate_prompts()
+```
+
+**Returns:** List[PromptTemplate]
+
+---
+
+##### Quick Mode Methods
+
+###### `parse_intent(user_input)`
+Parse natural language input to understand user intent.
+
+```python
+task = agent.parse_intent("optimize prompts for 10 generations")
+```
+
+**Parameters:**
+- `user_input` (str): Natural language command
+
+**Returns:** AgentTask (with task_type, parameters, confidence)
+
+---
+
+###### `execute_task(task)`
+Execute a parsed task.
+
+```python
+result = agent.execute_task(task)
+```
+
+**Parameters:**
+- `task` (AgentTask): Parsed task object
+
+**Returns:** str (result message)
+
+---
+
+##### Utility Methods
+
+###### `log_reasoning(stage, action, reasoning, input_data, output_data, confidence, bias_check)`
+Log reasoning for explainability.
+
+```python
+agent.log_reasoning(
+    stage="use_case_determination",
+    action="analyze_user_input",
+    reasoning="User wants fraud detection based on keywords",
+    input_data={"user_response": "detect fraud"},
+    output_data={"use_case": "fraud_detection"},
+    confidence=0.92,
+    bias_check={"severity": "low"}
+)
+```
+
+**Parameters:**
+- `stage` (str): Workflow stage name
+- `action` (str): Action being performed
+- `reasoning` (str): Explanation of decision
+- `input_data` (dict): Input data for this step
+- `output_data` (dict): Output/result data
+- `confidence` (float): Confidence level (0.0-1.0)
+- `bias_check` (dict, optional): Bias detection results
+
+**Returns:** None
+
+---
+
+###### `check_bias(text, context)`
+Check for potential biases in text or decisions.
+
+```python
+bias_result = agent.check_bias(
+    text="This will obviously work",
+    context="use_case_determination"
+)
+```
+
+**Parameters:**
+- `text` (str): Text to check
+- `context` (str): Context of the check
+
+**Returns:** dict with bias indicators and severity
+
+---
+
+##### Data Classes
+
+###### `UseCaseContext`
+```python
+@dataclass
+class UseCaseContext:
+    use_case_name: str
+    use_case_type: str
+    domain: str
+    description: str
+    key_objectives: List[str]
+    data_characteristics: Dict[str, Any]
+    reasoning: str
+    confidence: float
+```
+
+###### `DataRequirements`
+```python
+@dataclass
+class DataRequirements:
+    num_files: int
+    records_per_file: int
+    data_type: str
+    features: List[str]
+    anomaly_rate: float
+    special_conditions: Dict[str, Any]
+    reasoning: str
+```
+
+###### `MetricsPrescription`
+```python
+@dataclass
+class MetricsPrescription:
+    primary_metrics: List[str]
+    secondary_metrics: List[str]
+    metric_definitions: Dict[str, str]
+    thresholds: Dict[str, float]
+    reasoning: str
+    llm_explanation: str
+```
+
+###### `ReasoningLog`
+```python
+@dataclass
+class ReasoningLog:
+    stage: str
+    timestamp: str
+    action: str
+    reasoning: str
+    input_data: Dict[str, Any]
+    output_data: Dict[str, Any]
+    confidence: float
+    bias_check: Dict[str, Any]
+```
+
+---
 
 ## How It Works
 
