@@ -109,31 +109,177 @@ python main.py --mode optimize --provider anthropic --model claude-3-5-sonnet-20
 python main.py --mode optimize --provider ollama --model llama2 --generations 5
 ```
 
-## Usage Examples
+## CLI Usage Guide
 
-### Quick Test a Specific Prompt
+The system provides **two CLI interfaces** for different use cases:
 
+### 1. Interactive NLP CLI (Recommended for Interactive Use)
+
+The NLP agent provides a conversational interface with natural language commands.
+
+**Start the Agent:**
 ```bash
-python main.py --mode quick-test --prompt-name concise_direct
+python main.py --mode agent
+# or simply
+python main.py
 ```
 
-### Full Optimization with Custom Parameters
+**Available Commands:**
+
+| Command | Description | Example |
+|---------|-------------|---------|
+| **Configure Provider** | Set up LLM provider | `configure openai provider`<br>`use anthropic claude`<br>`setup ollama` |
+| **Generate Data** | Create sample datasets | `generate data`<br>`create 50 files with 200 transactions`<br>`generate sample data` |
+| **Optimize Prompts** | Run optimization | `optimize prompts`<br>`run optimization for 10 generations`<br>`improve prompts with 20 population size` |
+| **Test Prompt** | Test specific prompt | `test prompt concise_direct`<br>`evaluate prompt detailed_analytical` |
+| **Compare Prompts** | Compare all prompts | `compare prompts`<br>`which prompt is better` |
+| **List Prompts** | Show available prompts | `list prompts`<br>`show available prompts` |
+| **Show Results** | Display last results | `show results`<br>`display last results` |
+| **Help** | Show help | `help`<br>`what can you do` |
+| **Exit** | Quit the agent | `exit`<br>`quit`<br>`q` |
+
+**Example Session:**
+```bash
+$ python main.py
+
+============================================================
+NLP Agent - Interactive Mode
+============================================================
+Type 'help' for available commands or 'exit' to quit.
+============================================================
+
+Agent> configure openai provider
+
+Provider configured successfully!
+Provider: openai
+Model: gpt-4
+
+Agent> generate 30 files
+
+Generating 30 files with 100 transactions each...
+
+Data generation complete!
+Files created: 30
+Transactions per file: 100
+
+Statistics:
+  total_transactions: 3000
+  high_value_transactions: 450
+  anomalous_transactions: 150
+
+Agent> optimize prompts for 5 generations
+
+[Understanding: optimize_prompts]
+
+Running optimization for 5 generations...
+
+======================================================================
+AUTOMATED PROMPT TUNING SYSTEM
+======================================================================
+[... optimization runs ...]
+
+Optimization complete! Best prompt: detailed_analytical (Score: 0.847)
+
+Agent> show results
+
+Last Results:
+==================================================
+Prompt: detailed_analytical
+Score: 0.847
+High-Value F1: 0.92
+Anomaly F1: 0.85
+Response Time: 1.2s
+
+Agent> exit
+
+Goodbye!
+```
+
+---
+
+### 2. Traditional CLI (Recommended for Scripting/Automation)
+
+The traditional CLI uses command-line arguments for non-interactive use.
+
+**Available Modes:**
+
+| Mode | Description | Command |
+|------|-------------|---------|
+| `agent` | Start interactive NLP agent (default) | `python main.py --mode agent` |
+| `generate` | Generate sample data | `python main.py --mode generate` |
+| `optimize` | Run prompt optimization | `python main.py --mode optimize --provider openai` |
+| `quick-test` | Quick test prompts | `python main.py --mode quick-test --provider openai` |
+
+**Available Arguments:**
+
+| Argument | Type | Description | Example |
+|----------|------|-------------|---------|
+| `--mode` | choice | Mode to run (agent, generate, optimize, quick-test) | `--mode optimize` |
+| `--provider` | choice | LLM provider (openai, anthropic, ollama) | `--provider openai` |
+| `--model` | string | Model name (provider-specific) | `--model gpt-4` |
+| `--api-key` | string | API key for provider | `--api-key sk-xxx` |
+| `--generations` | int | Max generations for optimization | `--generations 10` |
+| `--population` | int | Population size per generation | `--population 20` |
+| `--test-files` | int | Number of test files to use | `--test-files 5` |
+| `--prompt-name` | string | Specific prompt to test | `--prompt-name concise_direct` |
+
+**Example Commands:**
 
 ```bash
+# 1. Generate sample data
+python main.py --mode generate
+
+# 2. Quick test a specific prompt (OpenAI)
+export OPENAI_API_KEY="your-api-key"
+python main.py --mode quick-test --provider openai --prompt-name concise_direct
+
+# 3. Run optimization with OpenAI (default parameters)
+python main.py --mode optimize --provider openai --model gpt-4
+
+# 4. Run optimization with custom parameters
 python main.py --mode optimize \
   --provider openai \
   --model gpt-4 \
   --generations 10 \
   --population 20 \
   --test-files 10
+
+# 5. Run optimization with Anthropic Claude
+export ANTHROPIC_API_KEY="your-api-key"
+python main.py --mode optimize \
+  --provider anthropic \
+  --model claude-3-5-sonnet-20241022 \
+  --generations 5
+
+# 6. Run optimization with Ollama (local)
+python main.py --mode optimize \
+  --provider ollama \
+  --model llama2 \
+  --generations 5
+
+# 7. Pass API key via argument (not recommended for security)
+python main.py --mode optimize \
+  --provider openai \
+  --api-key sk-your-key-here \
+  --generations 5
 ```
 
-### Using the API Programmatically
+**Help Command:**
+```bash
+python main.py --help
+```
+
+---
+
+### 3. Using the API Programmatically
+
+For advanced use cases, you can import and use the classes directly in Python:
 
 ```python
 from main import PromptTuningOrchestrator
+from nlp_agent import NLPAgent
 
-# Initialize orchestrator
+# Method 1: Use the orchestrator directly
 orchestrator = PromptTuningOrchestrator(
     llm_provider="openai",
     llm_config={"model": "gpt-4", "api_key": "your-key"},
@@ -141,11 +287,14 @@ orchestrator = PromptTuningOrchestrator(
     population_size=15
 )
 
-# Run optimization
 best_prompt = orchestrator.run_optimization()
-
 print(f"Best prompt: {best_prompt.template.name}")
 print(f"Score: {best_prompt.fitness:.3f}")
+
+# Method 2: Use the NLP agent programmatically
+agent = NLPAgent()
+result = agent.run_command("configure openai provider")
+result = agent.run_command("optimize prompts for 5 generations")
 ```
 
 ## How It Works
